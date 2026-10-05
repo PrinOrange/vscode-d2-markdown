@@ -1,0 +1,22 @@
+.vscode/**
+.vscode-test/**
+src/**
+scripts/**
+samples/**
+esbuild.js
+tsconfig.json
+.vscodeignore
+.gitignore
+**/*.map
+**/*.ts
+
+# Ship @d2lang/d2 and nothing else out of node_modules. Its browser and ESM
+# builds are never loaded by the extension host: the worker resolves the
+# package's `require` condition, which points at dist/node-cjs.
+node_modules/**
+!node_modules/@d2lang/d2/package.json
+!node_modules/@d2lang/d2/README.md
+!node_modules/@d2lang/d2/LICENSE.txt
+!node_modules/@d2lang/d2/THIRD_PARTY_NOTICES.txt
+!node_modules/@d2lang/d2/index.d.ts
+!node_modules/@d2lang/d2/dist/node-cjs/**

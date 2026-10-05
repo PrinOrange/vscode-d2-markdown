@@ -1,0 +1,108 @@
+/*
+ * Styles for D2 diagrams in the built-in Markdown preview.
+ *
+ * Colours come from the `--vscode-*` variables the preview exposes, so these
+ * rules follow the active theme without the extension having to know which one
+ * is in use. The diagram itself carries its own colours - they are baked into
+ * the SVG at render time, which is why changing the theme re-renders diagrams
+ * rather than restyling them.
+ */
+
+.d2-diagram {
+	display: flex;
+	justify-content: center;
+	margin: 1em 0;
+	overflow-x: auto;
+}
+
+/* Scale a wide diagram down to fit the preview instead of letting it overflow. */
+.d2-diagram > svg {
+	max-width: 100%;
+	height: auto;
+}
+
+/* Shown for the moment between a preview render and the diagram finishing. */
+.d2-diagram--pending {
+	color: var(--vscode-descriptionForeground);
+	font-style: italic;
+}
+
+.d2-status::before {
+	content: '';
+	display: inline-block;
+	width: 0.5em;
+	height: 0.5em;
+	margin-right: 0.5em;
+	border-radius: 50%;
+	background-color: currentColor;
+	opacity: 0.5;
+	animation: d2-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes d2-pulse {
+	0%,
+	100% {
+		opacity: 0.2;
+	}
+	50% {
+		opacity: 0.7;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.d2-status::before {
+		animation: none;
+	}
+}
+
+/* Shown instead of a diagram when `ascii: true` is set: D2 returns a text
+   drawing, whose alignment depends on every space being preserved. */
+.d2-ascii {
+	margin: 1em 0;
+	padding: 0.75em 1em;
+	overflow-x: auto;
+	border-radius: 3px;
+	background-color: var(--vscode-textCodeBlock-background, rgba(127, 127, 127, 0.1));
+	font-size: 0.85em;
+	line-height: 1.2;
+	white-space: pre;
+}
+
+.d2-error {
+	margin: 1em 0;
+	padding: 0.75em 1em;
+	border: 1px solid var(--vscode-inputValidation-errorBorder, currentColor);
+	border-radius: 3px;
+	background-color: var(--vscode-inputValidation-errorBackground);
+	color: var(--vscode-foreground);
+}
+
+.d2-error-title {
+	margin: 0 0 0.5em;
+	font-weight: 600;
+	color: var(--vscode-errorForeground, inherit);
+}
+
+.d2-error pre {
+	margin: 0.5em 0 0;
+	padding: 0.5em 0.75em;
+	overflow-x: auto;
+	border-radius: 3px;
+	background-color: var(--vscode-textCodeBlock-background, rgba(127, 127, 127, 0.1));
+	font-size: 0.9em;
+	white-space: pre-wrap;
+}
+
+.d2-error details {
+	margin-top: 0.5em;
+}
+
+.d2-error summary {
+	cursor: pointer;
+	color: var(--vscode-textLink-foreground);
+	font-size: 0.9em;
+}
+
+.d2-error-source {
+	color: var(--vscode-descriptionForeground);
+}

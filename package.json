@@ -1,0 +1,143 @@
+{
+  "name": "vscode-d2-markdown",
+  "displayName": "D2 Diagram Preview",
+  "description": "Render D2 diagrams in VS Code's built-in Markdown preview.",
+  "version": "0.1.0",
+  "publisher": "codemetic",
+  "license": "MIT",
+  "icon": "media/icon.png",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Visualization",
+    "Programming Languages"
+  ],
+  "keywords": [
+    "d2",
+    "diagram",
+    "markdown",
+    "preview",
+    "mermaid"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onLanguage:markdown"
+  ],
+  "contributes": {
+    "markdown.markdownItPlugins": true,
+    "markdown.previewStyles": [
+      "./media/d2.css"
+    ],
+    "configuration": {
+      "title": "D2",
+      "properties": {
+        "d2.theme": {
+          "type": "number",
+          "default": 0,
+          "markdownDescription": "Light-mode D2 theme ID. See the [D2 themes](https://d2lang.com/tour/themes) list. `0` is Neutral Default."
+        },
+        "d2.darkTheme": {
+          "type": "number",
+          "default": 200,
+          "markdownDescription": "Dark-mode D2 theme ID, used when the VS Code color theme is dark. `200` is Dark Mauve."
+        },
+        "d2.layout": {
+          "type": "string",
+          "enum": [
+            "dagre",
+            "elk",
+            "tala"
+          ],
+          "default": "dagre",
+          "description": "Layout engine used to render diagrams."
+        },
+        "d2.sketch": {
+          "type": "boolean",
+          "default": false,
+          "description": "Render diagrams in hand-drawn sketch mode."
+        },
+        "d2.pad": {
+          "type": "number",
+          "default": 100,
+          "description": "Pixels of padding around the rendered diagram."
+        },
+        "d2.center": {
+          "type": "boolean",
+          "default": false,
+          "description": "Center the diagram inside its viewbox."
+        },
+        "d2.renderTimeout": {
+          "type": "number",
+          "default": 15000,
+          "description": "Milliseconds to wait for a single diagram to render before giving up and showing an error block."
+        },
+        "d2.compileOptions": {
+          "type": "object",
+          "default": {},
+          "additionalProperties": true,
+          "markdownDescription": "Extra options passed to D2's `compile()`, using D2's own option names. See [CompileOptions](https://github.com/terrastruct/d2/blob/master/d2js/index.d.ts). Overrides the dedicated `d2.*` settings above; `d2.renderOptions` overrides this, and a per-block option in the fence info string overrides both. `fontRegular`, `fontItalic`, `fontBold` and `fontSemibold` are not supported: font data cannot be expressed in settings.json.",
+          "properties": {
+            "layout": {
+              "type": "string",
+              "enum": ["dagre", "elk", "tala"],
+              "description": "Layout engine to use."
+            },
+            "sketch": { "type": "boolean", "description": "Enable sketch mode." },
+            "themeID": { "type": "number", "description": "D2 theme ID. Overrides d2.theme/d2.darkTheme, so diagrams stop following the editor theme." },
+            "center": { "type": "boolean", "description": "Center the diagram in its viewbox." },
+            "pad": { "type": "number", "description": "Pixels padded around the diagram." },
+            "scale": { "type": "number", "description": "Scale the output; 1 turns off fitting the SVG to its container." },
+            "forceAppendix": { "type": "boolean", "description": "Add an appendix for tooltips and links." },
+            "target": { "type": "string", "description": "Board to render, e.g. \"layers.x.*\". Requires animateInterval to be greater than 0 for multi-board output." },
+            "animateInterval": { "type": "number", "description": "Milliseconds between boards when several are packaged into one animated SVG." },
+            "ascii": { "type": "boolean", "description": "Render ASCII art instead of an SVG." },
+            "asciiMode": { "type": "string", "enum": ["standard", "extended"], "description": "Character set used by ASCII rendering." }
+          }
+        },
+        "d2.renderOptions": {
+          "type": "object",
+          "default": {},
+          "additionalProperties": true,
+          "markdownDescription": "Extra options passed to D2's `render()`, using D2's own option names. See [RenderOptions](https://github.com/terrastruct/d2/blob/master/d2js/index.d.ts). Takes precedence over `d2.compileOptions` and the settings above; a per-block option in the fence info string still wins. `salt`, `noXMLTag` and `darkThemeID` are set by the extension and are ignored here: diagrams sharing a preview document, and following the editor theme, depend on their values. The font options are ignored as well, since font data cannot be expressed in settings.json.",
+          "properties": {
+            "sketch": { "type": "boolean", "description": "Enable sketch mode." },
+            "themeID": { "type": "number", "description": "D2 theme ID. Overrides d2.theme/d2.darkTheme, so diagrams stop following the editor theme." },
+            "center": { "type": "boolean", "description": "Center the diagram in its viewbox." },
+            "pad": { "type": "number", "description": "Pixels padded around the diagram." },
+            "scale": { "type": "number", "description": "Scale the output; 1 turns off fitting the SVG to its container." },
+            "forceAppendix": { "type": "boolean", "description": "Add an appendix for tooltips and links." },
+            "target": { "type": "string", "description": "Board to render, e.g. \"layers.x.*\". Requires animateInterval to be greater than 0 for multi-board output." },
+            "animateInterval": { "type": "number", "description": "Milliseconds between boards when several are packaged into one animated SVG." },
+            "ascii": { "type": "boolean", "description": "Render ASCII art instead of an SVG." },
+            "asciiMode": { "type": "string", "enum": ["standard", "extended"], "description": "Character set used by ASCII rendering." }
+          }
+        },
+        "d2.syncWaitMs": {
+          "type": "number",
+          "default": 350,
+          "markdownDescription": "How long the Markdown preview may wait for a diagram that is not cached yet, in milliseconds. Diagrams are rendered ahead of time as you type, so this is only a fallback; anything slower falls back to a placeholder that is filled in as soon as the render finishes. Set to `0` to never wait."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.js",
+    "watch": "node esbuild.js --watch",
+    "check": "tsc --noEmit",
+    "verify": "node scripts/verify-render.mjs",
+    "verify:service": "node scripts/verify-service.mjs",
+    "test": "npm run check && npm run build && npm run verify && npm run verify:service",
+    "vscode:prepublish": "node esbuild.js --production",
+    "package": "vsce package"
+  },
+  "dependencies": {
+    "@d2lang/d2": "^0.1.34"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.24.2",
+    "typescript": "^5.7.2"
+  }
+}
