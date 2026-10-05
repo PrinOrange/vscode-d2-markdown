@@ -1,9 +1,9 @@
 {
-  "name": "vscode-d2-markdown",
-  "displayName": "D2 Diagram Preview",
+  "name": "markdown-d2-preview",
+  "displayName": "D2 Diagram Preview in VSCode Markdown",
   "description": "Render D2 diagrams in VS Code's built-in Markdown preview.",
-  "version": "0.1.0",
-  "publisher": "codemetic",
+  "version": "0.1.1",
+  "publisher": "prinOrange",
   "license": "MIT",
   "icon": "media/icon.png",
   "engines": {
@@ -130,6 +130,10 @@
     "test": "npm run check && npm run build && npm run verify && npm run verify:service",
     "vscode:prepublish": "node esbuild.js --production",
     "package": "vsce package"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PrinOrange/vscode-d2-markdown"
   },
   "dependencies": {
     "@d2lang/d2": "^0.1.34"
